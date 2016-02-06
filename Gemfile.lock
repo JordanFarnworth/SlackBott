@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.4.0)
     byebug (8.2.2)
     eventmachine (1.0.9.1)
     faraday (0.9.2)
@@ -10,9 +11,20 @@ GEM
     faye-websocket (0.10.2)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
+    firebase (0.2.6)
+      httpclient
+      json
     gli (2.13.4)
+    google_custom_search_api (2.0.0)
+      addressable
+      httparty
     hashie (3.4.3)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    httpclient (2.7.1)
     json (1.8.3)
+    multi_xml (0.5.5)
     multipart-post (2.0.0)
     slack-ruby-client (0.6.0)
       faraday
@@ -32,6 +44,8 @@ DEPENDENCIES
   byebug
   eventmachine
   faye-websocket
+  firebase
+  google_custom_search_api
   slack-ruby-client
 
 BUNDLED WITH

@@ -20,7 +20,7 @@ module Handlers
     end
 
 
-    def get_result()
+    def get_result
       if @results != Array && @results["error"]
         error = results["error"]["errors"][0]["message"]
         hash = { "error" => error }
@@ -37,17 +37,21 @@ module Handlers
       @params = params
     end
 
-    def query_searches()
+    def query_searches
       puts "searching firebase.."
       firebase_client = Clients::FireBase.new(@params)
       response = firebase_client.query_firebase @params[:params][:user]
     end
 
-    def log_google_search()
+    def log_google_search
       puts "Logging to firebase.."
       firebase_client = Clients::FireBase.new(@params[:firebase_data])
       response = firebase_client.log_google_search
       puts response.code
     end
+  end
+
+  class Twitter
+
   end
 end

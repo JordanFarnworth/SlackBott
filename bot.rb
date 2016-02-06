@@ -33,28 +33,28 @@ end
 
   when /kitt~google/i
     @client.message channel: data.channel, text: "let me grab that real quick.."
-    google_parser = Parsers::Google.new()
+    google_parser = Parsers::Google.new
     @params[:slack_data] = google_parser.parse_slack_response_for_google_search(data)
     @params[:firebase_data] = {endpoint: "google_question", params: @params[:slack_data]}
     firebase = Handlers::Firebase.new(@params)
     firebase.log_google_search
     google = Handlers::Google.new(@params[:slack_data][:text])
-    result = google.get_result()
+    result = google.get_result
     @client.message channel: data.channel, text:  "Title: " + result.title
     @client.message channel: data.channel, text:  "Link: " + result.link
     #Handlers::Google && Handlers::Firebase
-  when /kitt~searchTwtter/i
-    @client.message channel: data.channel, text: "let me grab that real quick.."
-    google_parser = Parsers::Google.new()
-    @params[:slack_data] = google_parser.parse_slack_response_for_google_search(data)
-    @params[:firebase_data] = {endpoint: "google_question", params: @params[:slack_data]}
-    firebase = Handlers::Firebase.new(@params)
-    firebase.log_google_search
-    google = Handlers::Google.new(@params[:slack_data][:text])
-    result = google.get_result()
-    @client.message channel: data.channel, text:  "Title: " + result.title
-    @client.message channel: data.channel, text:  "Link: " + result.link
-    #Handlers::Google && Handlers::Firebase
+  # when /kitt~searchTwtter/i
+  #   @client.message channel: data.channel, text: "let me grab that real quick.."
+  #   google_parser = Parsers::Google.new()
+  #   @params[:slack_data] = google_parser.parse_slack_response_for_google_search(data)
+  #   @params[:firebase_data] = {endpoint: "google_question", params: @params[:slack_data]}
+  #   firebase = Handlers::Firebase.new(@params)
+  #   firebase.log_google_search
+  #   google = Handlers::Google.new(@params[:slack_data][:text])
+  #   result = google.get_result()
+  #   @client.message channel: data.channel, text:  "Title: " + result.title
+  #   @client.message channel: data.channel, text:  "Link: " + result.link
+  #   #Handlers::Google && Handlers::Firebase
   when /kitt~backSearch/i
     @client.message channel: data.channel, text: "searching.."
     firebase_parser = Parsers::Firebase.new()
@@ -72,7 +72,6 @@ end
     #Handlers::Firebase
   when /kitt~help/i
     @client.web_client.reactions_add name: 'awyeah', timestamp: data.ts, channel: data.channel
-  end
   when /awyeah/i
     @client.web_client.reactions_add name: 'awyeah', timestamp: data.ts, channel: data.channel
   end

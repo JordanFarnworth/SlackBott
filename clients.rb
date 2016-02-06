@@ -6,10 +6,10 @@ require 'firebase'
     def initialize(config, base_uri = 'https://kittbot.firebaseio.com/')
       @firebase = Firebase::Client.new(base_uri)
       @config = config
-      @users = Helpers.users()
+      @users = Helpers.users
     end
 
-    def log_google_search()
+    def log_google_search
       @firebase.push(@config[:endpoint], @config[:params])
     end
 

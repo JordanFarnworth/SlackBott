@@ -3,10 +3,20 @@ require './helpers.rb'
 include Helpers
 
 module Parsers
+  class Twitter
+
+    def initialize
+      @users = Helpers.users
+    end
+
+    def parse_slack_response_for_twitter_search(data)
+      requestor = @users[data.user.to_sym]
+    end
+  end
   class Firebase
 
-    def initialize()
-      @users = Helpers.users()
+    def initialize
+      @users = Helpers.users
     end
 
     def parse_slack_response_for_google_query(data)
@@ -19,8 +29,8 @@ module Parsers
 
   class Google
 
-    def initialize()
-      @users = Helpers.users()
+    def initialize
+      @users = Helpers.users
     end
 
     def parse_slack_response_for_google_search(data)

@@ -7,4 +7,4 @@ gem 'byebug'
 gem 'firebase'
 gem "google_custom_search_api"
 gem 'twitter', '~> 5.16'
-gem 'rake'
+gem 'rspotify'

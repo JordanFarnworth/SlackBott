@@ -5,13 +5,16 @@ require 'twitter'
 require 'net/http'
 require 'json'
 require 'firebase'
+require 'rspotify'
 require './Handlers/twitter-handler.rb'
 require './Handlers/firebase-handler.rb'
 require './Handlers/google-handler.rb'
+require './Handlers/spotify-handler.rb'
 
 include TwitterHandler
 include FirebaseHandler
 include GoogleHandler
+include SpotifyHandler
 
 yaml = YAML.load_file("settings.yml")
 Slack.configure do |config|
@@ -100,16 +103,25 @@ end
       end
     end
 
-  when /kitt~help/i
+  when /%spotify/i
+    @params[:slack_data] = data
+    @params[:firebase_data] = {endpoint: "spotify", params: {}}
+    FirebaseHandler.log_spotify_response_to_firebase @params
+    response = SpotifyHandler.search_spotify @params
+    @client.message channel: data.channel, text: response[:result].uri.to_s
+
+  when /%help/i
     @client.message channel: data.channel, text: "*phrase-to-summon-kitt*  <phrase that kitt needs to opperate> (don't includes the <>'s in your search ex: `kitt~google your mom`)"
     @client.message channel: data.channel, text: "*kitt~google*  <your google phrase>"
     @client.message channel: data.channel, text: "*kitt~backSearch*  #<User> (must have capitolized first letter of name)"
     @client.message channel: data.channel, text: "*^^^* will show you all the google searches a user has performed"
     @client.message channel: data.channel, text: "*kitt~tweet*  <your tweet for kitt bot>"
     @client.message channel: data.channel, text: "*kitt~searchTwitter*   #U<username> -optional if search term is present <your search term> -optional if username is present "
-  when /tweet sent/
+    @client.message channel: data.channel, text: "*%spotify*  -s <song title>, -a <album title>, -ar <artist name>, -p <playlist title>"
+    @client.message channel: data.channel, text: "*_ note for %spotify_*  only takes one param at a time, so you can't do %spotify -s one love, -a justin bieber."
+    @client.message channel: data.channel, text: "*_ note for %spotify_*  instead, just search for the artist, and find the song that way. ex: %spotify -a justin bieber"
 
-    @client.web_client.reactions_add name: 'yey', timestamp: data.ts, channel: data.channel
+
   when /awyeah/i
     @client.web_client.reactions_add name: 'awyeah', timestamp: data.ts, channel: data.channel
   end

@@ -7,8 +7,14 @@ module Helpers
     U046G5M1D: "Jordan"
   }
 
-  def users()
+  def users
     @users
+  end
+
+  def shift_param string
+    a = string.split(" ")
+    a.shift
+    a.join(" ")
   end
 
 end

@@ -3,15 +3,7 @@
 module FirebaseClient
   @firebase = Firebase::Client.new('https://kittbot.firebaseio.com/')
 
-  def post_google_search(firebase_data)
-    @firebase.push(firebase_data[:endpoint], firebase_data[:params])
-  end
-
-  def post_tweet(firebase_data)
-    @firebase.push(firebase_data[:endpoint], firebase_data[:params])
-  end
-
-  def post_twitter_search(firebase_data)
+  def post_firebase_data firebase_data
     @firebase.push(firebase_data[:endpoint], firebase_data[:params])
   end
 

@@ -8,7 +8,7 @@ module TwitterParser
 
   def twitter_parse_slack_response_for_twitter_search(data)
     user = @users[data.user.to_sym]
-    twitter_user = data.text.match(/\B#U:(\w\w+)/)
+    twitter_user = data.text.match(/\B-u (\w\w+)/)
     if twitter_user
       twitter_user = twitter_user[1]
     else
@@ -17,7 +17,7 @@ module TwitterParser
     search_term = data.text
     search_term = search_term.split(" ")
     unless twitter_user == ""
-      search_term.shift && search_term.shift
+      search_term.shift && search_term.shift && search_term.shift
     else
       search_term.shift
     end

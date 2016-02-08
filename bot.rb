@@ -40,7 +40,7 @@ end
     puts data
     @client.message channel: data.channel, text: ":fu:"
 
-  when /kitt~google/i
+  when /%google/i
     @params[:slack_data] = data
     @params[:firebase_data] = {endpoint: "google_question", params: {}}
     FirebaseHandler.log_google_search @params
@@ -52,7 +52,7 @@ end
       @client.message channel: data.channel, text:  "Error with google handler. Check your API keys/search engine id if this is a mistake"
     end
 
-  when /kitt~searchTwitter/i
+  when /%search-twitter/i
     @params[:slack_data] = data
     @params[:firebase_data] = {endpoint: "twitter_search", params: {}}
     FirebaseHandler.log_twitter_search @params
@@ -79,7 +79,7 @@ end
       @client.message channel: data.channel, text: "Search came back empty"
     end
 
-  when /kitt~tweet/i
+  when /%tweet/i
     @params[:slack_data] = data
     @params[:firebase_data] = {endpoint: "tweet", params: {}}
     FirebaseHandler.log_tweet @params
@@ -91,7 +91,7 @@ end
       @client.message channel: data.channel, text: "text can't be blank"
     end
 
-  when /kitt~backSearch/i
+  when /%back-search/i
     @params[:slack_data] = data
     @params[:firebase_data] = {endpoint: "google_question", params: {}}
     response = FirebaseHandler.query_searches @params
@@ -108,18 +108,24 @@ end
     @params[:firebase_data] = {endpoint: "spotify", params: {}}
     FirebaseHandler.log_spotify_response_to_firebase @params
     response = SpotifyHandler.search_spotify @params
-    @client.message channel: data.channel, text: response[:result].uri.to_s
+    if response[:result]
+      @client.message channel: data.channel, text: response[:result].uri.to_s
+    else
+      @client.message channel: data.channel, text: "***** search value can't be blank."
+      @client.message channel: data.channel, text: "***** type *-s* to search songs, *-a* for albums, *-ar* for artists, and *-p* for playlists."
+      @client.message channel: data.channel, text: "***** only one search value is allowed per search."
+    end
 
   when /%help/i
-    @client.message channel: data.channel, text: "*phrase-to-summon-kitt*  <phrase that kitt needs to opperate> (don't includes the <>'s in your search ex: `kitt~google your mom`)"
-    @client.message channel: data.channel, text: "*kitt~google*  <your google phrase>"
-    @client.message channel: data.channel, text: "*kitt~backSearch*  #<User> (must have capitolized first letter of name)"
+    @client.message channel: data.channel, text: "*%<kitt_command>*  <parameters and search phrases> (don't includes the <>'s in your search ex: `%google your mom`)"
+    @client.message channel: data.channel, text: "*%google*  <your google phrase>"
+    @client.message channel: data.channel, text: "*%back-search*  *#*<user>"
     @client.message channel: data.channel, text: "*^^^* will show you all the google searches a user has performed"
-    @client.message channel: data.channel, text: "*kitt~tweet*  <your tweet for kitt bot>"
-    @client.message channel: data.channel, text: "*kitt~searchTwitter*   #U<username> -optional if search term is present <your search term> -optional if username is present "
+    @client.message channel: data.channel, text: "*%tweet*  <your tweet for kitt bot>"
+    @client.message channel: data.channel, text: "*%search-twitter*   *-u* <username> (_optional if search term is present, but username must be listed first if you want to search a user for a specific tweet_) <your search term> (_optional if username is present_) "
     @client.message channel: data.channel, text: "*%spotify*  -s <song title>, -a <album title>, -ar <artist name>, -p <playlist title>"
-    @client.message channel: data.channel, text: "*_ note for %spotify_*  only takes one param at a time, so you can't do %spotify -s one love, -a justin bieber."
-    @client.message channel: data.channel, text: "*_ note for %spotify_*  instead, just search for the artist, and find the song that way. ex: %spotify -a justin bieber"
+    @client.message channel: data.channel, text: "*[note for ^^^]*  this command only takes one param at a time, so you can't do *%spotify* *-s* one love, *-a* justin bieber."
+    @client.message channel: data.channel, text: "*[note for ^^^]*  instead, just search for the artist, and find the song that way. ex: *%spotify* -a justin bieber"
 
 
   when /awyeah/i

@@ -6,16 +6,17 @@ require 'net/http'
 require 'json'
 require 'firebase'
 require 'rspotify'
+require 'soundcloud'
 require './Handlers/twitter-handler.rb'
-
 require './Handlers/google-handler.rb'
 require './Handlers/spotify-handler.rb'
+require './Handlers/soundcloud-handler.rb'
 require './helpers.rb'
 
 include TwitterHandler
-
 include GoogleHandler
 include SpotifyHandler
+include SoundcloudHandler
 include Helpers
 
 yaml = YAML.load_file("settings.yml")
@@ -35,6 +36,7 @@ GOOGLE_SEARCH_CX = yaml['google']['search_engine']
 @client.on :hello do
   puts "Connected #{@client.self.name} to #{@client.team.name}"
 end
+
 
 @client.on :message do |data|
   case data.text
@@ -95,9 +97,16 @@ end
       @client.message channel: data.channel, text: "***** only one search value is allowed per search."
     end
 
+  when /%soundcloud/i
+    @params[:slack_data] = data
+    response = SoundcloudHandler.search_soundcloud @params
+    @client.message channel: data.channel, text: response.permalink_url.to_s
+
+
   when /%help/i
     @client.message channel: data.channel, text: "*%<weebo_command>*  <parameters and search phrases> (don't includes the <>'s in your search ex: `%google your mom`)"
     @client.message channel: data.channel, text: "*%google*  <your google phrase>"
+    @client.message channel: data.channel, text: "*%soundcloud*  <your soundcloud search term>"
     @client.message channel: data.channel, text: "*%tweet*  <your tweet for kitt bot>"
     @client.message channel: data.channel, text: "*%twitter*   *-u* <username> (_optional if search term is present, but username must be listed first if you want to search a user for a specific tweet_) <your search term> (_optional if username is present_)"
     @client.message channel: data.channel, text: "*%spotify*  -s <song title>, -a <album title>, -ar <artist name>, -p <playlist title>"
@@ -108,5 +117,4 @@ end
     @client.web_client.reactions_add name: 'awyeah', timestamp: data.ts, channel: data.channel
   end
 end
-
 @client.start!

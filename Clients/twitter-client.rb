@@ -19,14 +19,13 @@ module TwitterClient
   end
 
   def search(data)
-
     yaml = YAML.load_file("./settings.yml")
     matches = []
     unless data.nil?
       if data[:twitter_user] == ""
         st = data[:search_term]
         begin
-          @twitter_client.search("#{st} -rt").take(2).collect do |tweet|
+          @twitter_client.search("#{st} -rt").take(1).collect do |tweet|
             matches << tweet
           end
         rescue

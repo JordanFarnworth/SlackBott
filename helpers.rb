@@ -1,5 +1,4 @@
 module Helpers
-
   @users = {
     U046R5JLB: "Colin",
     U04689UFR: "Ben",
@@ -16,5 +15,4 @@ module Helpers
     a.shift
     a.join(" ")
   end
-
 end

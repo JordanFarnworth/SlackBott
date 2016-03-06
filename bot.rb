@@ -7,16 +7,21 @@ require 'json'
 require 'firebase'
 require 'rspotify'
 require 'soundcloud'
+require 'rubygems'
+require 'pp'
+require 'jira'
 require './Handlers/twitter-handler.rb'
 require './Handlers/google-handler.rb'
 require './Handlers/spotify-handler.rb'
 require './Handlers/soundcloud-handler.rb'
+require './Handlers/jira-handler.rb'
 require './helpers.rb'
 
 include TwitterHandler
 include GoogleHandler
 include SpotifyHandler
 include SoundcloudHandler
+include JiraHandler
 include Helpers
 
 yaml = YAML.load_file("settings.yml")
@@ -102,12 +107,17 @@ end
     response = SoundcloudHandler.search_soundcloud @params
     @client.message channel: data.channel, text: response.permalink_url.to_s
 
+  when /%jira/i
+    @params[:slack_data] = data
+    response = JiraHandler.handle_jira_command @params
+    @client.message channel: data.channel, text: response[:uri]
+
 
   when /%help/i
     @client.message channel: data.channel, text: "*%<weebo_command>*  <parameters and search phrases> (don't includes the <>'s in your search ex: `%google your mom`)"
     @client.message channel: data.channel, text: "*%google*  <your google phrase>"
     @client.message channel: data.channel, text: "*%soundcloud*  <your soundcloud search term>"
-    @client.message channel: data.channel, text: "*%tweet*  <your tweet for kitt bot>"
+    @client.message channel: data.channel, text: "*%tweet*  <your tweet for weebo>"
     @client.message channel: data.channel, text: "*%twitter*   *-u* <username> (_optional if search term is present, but username must be listed first if you want to search a user for a specific tweet_) <your search term> (_optional if username is present_)"
     @client.message channel: data.channel, text: "*%spotify*  -s <song title>, -a <album title>, -ar <artist name>, -p <playlist title>"
     @client.message channel: data.channel, text: "*[note for ^^^]*  this command only takes one param at a time, so you can't do *%spotify* *-s* one love, *-a* justin bieber."

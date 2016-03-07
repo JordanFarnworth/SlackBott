@@ -110,11 +110,28 @@ end
   when /%jira/i
     @params[:slack_data] = data
     response = JiraHandler.handle_jira_command @params
-    @client.message channel: data.channel, text: response[:uri]
+    unless response[:errors]
+      @client.message channel: data.channel, text: response[:uri]
+    else
+      @client.message channel: data.channel, text: "Error: " + response[:errors]
+    end
 
+  when /%\[cjt\]/i
+    @client.message channel: data.channel, text: "%jira $create --p ‘TEST' --t ‘task' --s ‘summary_here’ --d 'description_here' --a jira_username' --y 'priority'"
+
+  when /(?:\s|^)([A-Z]+-[0-9]+)(?=\s|$)/
+    @params[:slack_data] = data
+    response = JiraHandler.handle_jira_link @params
+    unless response.nil?
+      @client.message channel: data.channel, text: response[:url]
+    else
+      next
+    end
 
   when /%help/i
     @client.message channel: data.channel, text: "*%<weebo_command>*  <parameters and search phrases> (don't includes the <>'s in your search ex: `%google your mom`)"
+    @client.message channel: data.channel, text: "*%jira*  $(create <or> update) <- you can either create or update a jira"
+    @client.message channel: data.channel, text: "jira options for create: --p <project (use the short hand ex: PFS)>, --t <type of jira being created"
     @client.message channel: data.channel, text: "*%google*  <your google phrase>"
     @client.message channel: data.channel, text: "*%soundcloud*  <your soundcloud search term>"
     @client.message channel: data.channel, text: "*%tweet*  <your tweet for weebo>"

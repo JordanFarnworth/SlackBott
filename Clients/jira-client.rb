@@ -16,14 +16,30 @@ module JiraClient
   }
 
   @client = JIRA::Client.new(@options)
+  @client = @client.request_client
 
+  def get_meta_data
+    meta_data = @client.make_request("GET", "#{@options[:site]}#{@options[:context_path]}/issue/createmeta", {}.to_json, @headers)
+  end
+
+  def current_uri
+    "#{@options[:site]}"
+  end
+
+  def real_ticket? ticket
+    response = @client.make_request("GET", "#{@options[:site]}#{@options[:context_path]}/issue/#{ticket}", {}.to_json, @headers)
+    if response.code == "200"
+      return true
+    else
+      return false
+    end
+  end
 
   def create_jira data
     @project = data[:project]
     @project ||= ''
     unless @project.empty?
       body = build_body data
-      @client = @client.request_client
       response = @client.make_request("POST", "#{@options[:site]}#{@options[:context_path]}/issue/", body, @headers)
     else
       return {error: "needs project"}
@@ -44,11 +60,17 @@ module JiraClient
     if data[:priority]
         hash[:fields][:priority] = {}
         hash[:fields][:priority][:name] = data[:priority]
-    elsif data[:assignee]
+    end
+    if data[:assignee]
       hash[:fields][:assignee] = {}
       hash[:fields][:assignee][:name] = data[:assignee]
-    elsif data[:description]
+    end
+    if data[:description]
       hash[:fields][:description] = data[:description]
+    end
+    if data[:priority]
+      hash[:fields][:priority] = {}
+      hash[:fields][:priority][:name] = data[:priority]
     end
     json = hash.to_json
   end

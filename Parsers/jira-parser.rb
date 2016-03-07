@@ -41,6 +41,7 @@ module JiraParser
     hash = {components: [], errors: [], request_type: request_type}
     a = string.split /(\B--\S)/
     a.shift
+    a = a.map { |ar| ar.gsub("'", "") }
     a.each_with_index do |s, i|
       case s
       when "--p"
@@ -62,7 +63,11 @@ module JiraParser
       when "--a"
         assign = a[i + 1]
         assign = format_param assign
-        hash[:assignee] = assign  
+        hash[:assignee] = assign
+      when "--y"
+        assign = a[i + 1]
+        assign = format_param assign
+        hash[:priority] = assign
       when "--c"
         comp = a[i + 1]
         comps = comp.gsub(/[^[:alnum:]]+/, ',')
@@ -75,6 +80,9 @@ module JiraParser
         hash[:errors] << "#{s}"
       end
     end
+    hash[:type] = hash[:type].capitalize if hash[:type]
+    hash[:project] = hash[:project].upcase if hash[:project]
+    hash[:priority] = hash[:priority].capitalize if hash[:priority]
     hash
   end
 

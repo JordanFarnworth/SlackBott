@@ -1,12 +1,15 @@
 module JiraClient
 
-  @username = "jordanfarn23"
-  @password = "FuckYou!23@@"
+  yaml_jira = YAML.load_file("./settings.yml")
+
+  @username = yaml_jira['username']
+  @password = yaml_jira['password']
+  @base_url = yaml_jira['url']
 
   @options = {
               :username => @username,
               :password => @password,
-              :site     => 'https://hbatelier.atlassian.net',
+              :site     => @base_url,
               :context_path => '/rest/api/2',
               :auth_type => :basic,
               :read_timeout => 120

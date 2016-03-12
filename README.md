@@ -31,24 +31,47 @@ that's it, pretty simple.
 that being said, you will need quite a few creds
 
 slack:
+
   token: https://api.slack.com/web
+
+
 google:
+
   api_key: https://developers.google.com/maps/documentation/javascript/get-api-key
+
   search_engine: https://support.google.com/customsearch/answer/2630963?hl=en
+
+
 twitter:
+
   consumer_key: https://apps.twitter.com/
+
   consumer_secret: https://apps.twitter.com/
+
   access_token: https://apps.twitter.com/
+
   access_token_secret: https://apps.twitter.com/
+
   error_message: just put an error message here. twitters api throws dumb exceptions
+
   (the error message I use: no results found. if you think this is a mistake, check your access keys and tokens)
+
 spotify:
+
   client_id: https://developer.spotify.com/web-api/
+
   client_secret: https://developer.spotify.com/web-api/
+
 soundcloud:
+
   client_id: https://github.com/soundcloud/soundcloud-ruby
+
 jira:
+
   username: https://docs.atlassian.com/jira/REST/latest/
+
   password: FuckYou!https://docs.atlassian.com/jira/REST/latest/@@
+
   url: https://docs.atlassian.com/jira/REST/latest/
+  
   (good luck ^)

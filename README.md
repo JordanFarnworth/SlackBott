@@ -70,7 +70,7 @@ jira:
 
   username: https://docs.atlassian.com/jira/REST/latest/
 
-  password: FuckYou!https://docs.atlassian.com/jira/REST/latest/@@
+  password: https://docs.atlassian.com/jira/REST/latest/@@
 
   url: https://docs.atlassian.com/jira/REST/latest/
   
